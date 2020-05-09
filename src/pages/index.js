@@ -80,8 +80,8 @@ const IndexPage = ({ classes }) => {
           >
             <FormControlLabel value="30000" control={<Radio color="primary" />} label="30 sec" />
             <FormControlLabel value="60000" control={<Radio color="primary" />} label="60 sec" />
-            <FormControlLabel value="300000" control={<Radio color="primary" />} label="5 min" />
-            <FormControlLabel value="600000" control={<Radio color="primary" />} label="10 min" />
+            <FormControlLabel value="90000" control={<Radio color="primary" />} label="90 sec" />
+            <FormControlLabel value="120000" control={<Radio color="primary" />} label="120 sec" />
           </RadioGroup>
           {type === "class" && (
             <>
