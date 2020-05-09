@@ -145,6 +145,7 @@ const Images = ({ classes, onClose, options, data }) => {
           color="secondary"
           onClick={() => {
             if (state.seenImageIndex > 0) {
+              setPlay(false);
               dispatch({ type: 'imageFromHistory', dir: -1 });
             }
           }}
@@ -163,10 +164,13 @@ const Images = ({ classes, onClose, options, data }) => {
           className={classes.icon}
           color="secondary"
           onClick={() => {
+            setPlay(false);
             if (state.seenImageIndex + 1 === state.seenImages.length) {
               setNewImage();
             }
-            else dispatch({ type: 'imageFromHistory', dir: +1 });
+            else {
+              dispatch({ type: 'imageFromHistory', dir: +1 });
+            }
           }}
         />
       </div>
