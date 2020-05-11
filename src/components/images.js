@@ -118,7 +118,7 @@ const Images = ({ classes, onClose, options, data }) => {
     if (options.type === "same") {
       setImageTimeout(parseInt(options.shortTime));
     } else if (options.type === "class") {
-      setImageTimeout(state.seenImages.length > 8 ? parseInt(options.longTime) : parseInt(options.shortTime));
+      setImageTimeout(state.seenImages.length > parseInt(options.shortPicturesBeforeLong) ? parseInt(options.longTime) : parseInt(options.shortTime));
     }
   }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useStaticQuery, graphql } from "gatsby"
-import { Button, RadioGroup, Radio, Typography, FormControlLabel, FormControl, FormLabel } from "@material-ui/core";
+import { Button, RadioGroup, Radio, Typography, FormControlLabel, FormControl, FormLabel, TextField } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Fullscreen from "react-full-screen";
@@ -28,6 +28,7 @@ const IndexPage = ({ classes }) => {
   const [type, setType] = useState("same");
   const [shortTime, setShortTime] = useState("60000");
   const [longTime, setLongTime] = useState("600000");
+  const [shortPicturesBeforeLong, setShortPicturesBeforeLong] = useState(10);
   const [fullScreen, setFullScreen] = useState(false);
   const [timer, setTimer] = useState(0);
 
@@ -97,6 +98,14 @@ const IndexPage = ({ classes }) => {
                 <FormControlLabel value="3600000" control={<Radio color="primary" />} label="60 min" />
                 <FormControlLabel value="86400000‬" control={<Radio color="primary" />} label="No limit" />
               </RadioGroup>
+              <TextField
+                value={shortPicturesBeforeLong}
+                onChange={(e) => setShortPicturesBeforeLong(e.target.value)}
+                type="number"
+                variant="outlined"
+                label="Short pictures before long"
+                className={classes.marginBottomMedium}
+              />
             </>
           )}
           <Button
@@ -121,7 +130,7 @@ const IndexPage = ({ classes }) => {
             {timer}
         </Typography>)}
       <Fullscreen enabled={fullScreen} onChange={(enabled) => setFullScreen(enabled)}>
-        {fullScreen && <Images data={data.allFile.edges} onClose={() => setFullScreen(false)} options={{ type, shortTime, longTime }} />}
+        {fullScreen && <Images data={data.allFile.edges} onClose={() => setFullScreen(false)} options={{ type, shortTime, longTime, shortPicturesBeforeLong }} />}
       </Fullscreen>
     </ThemeProvider>
   )
