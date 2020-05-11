@@ -57,6 +57,17 @@ const styles = theme => ({
   hidden: {
     opacity: 0,
   },
+  timer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 1,
+    color: '#ee008b',
+    fontWeight: 900,
+    fontSize: '10rem',
+  },
 });
 
 const reducer = (state, action) => {
@@ -92,6 +103,7 @@ const Images = ({ classes, onClose, options, data }) => {
   const [controlsVisible, setcontrolsVisible] = useState(false);
   const [visibilityDelay, setVisibilityDelay] = useState(0);
   const [imageTimeout, setImageTimeout] = useState(0);
+  const [pictureIndicatorTimeOut, setPictureIndicatorTimeout] = useState(null);
 
   useEffect(() => {
     setcontrolsVisible(true);
@@ -100,6 +112,7 @@ const Images = ({ classes, onClose, options, data }) => {
 
   useInterval(() => setNewImage(), play ? imageTimeout : null);
   useTimeout(() => setcontrolsVisible(false), controlsVisible ? visibilityDelay : null);
+  useTimeout(() => setPictureIndicatorTimeout(null), pictureIndicatorTimeOut);
 
   const getRandom = () => {
     const min = Math.ceil(0);
@@ -118,7 +131,11 @@ const Images = ({ classes, onClose, options, data }) => {
     if (options.type === "same") {
       setImageTimeout(parseInt(options.shortTime));
     } else if (options.type === "class") {
-      setImageTimeout(state.seenImages.length > parseInt(options.shortPicturesBeforeLong) ? parseInt(options.longTime) : parseInt(options.shortTime));
+      const timeForLongImage = state.seenImages.length > parseInt(options.shortPicturesBeforeLong) - 1;
+      setImageTimeout(timeForLongImage ? parseInt(options.longTime) : parseInt(options.shortTime));
+      if (timeForLongImage) {
+        setPictureIndicatorTimeout(5000);
+      }
     }
   }
 
@@ -174,6 +191,12 @@ const Images = ({ classes, onClose, options, data }) => {
           }}
         />
       </div>
+      {pictureIndicatorTimeOut && state.seenImages.length > parseInt(options.shortPicturesBeforeLong) - 1 && (
+        <Typography
+          variant="h1"
+          className={classes.timer}>
+            {`${(parseInt(options.longTime) / 10000) / 6}min`}
+        </Typography>)}
     </div>
   );
 };
