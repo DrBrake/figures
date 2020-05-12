@@ -92,9 +92,9 @@ const IndexPage = ({ classes }) => {
                 onChange={(e) => setLongTime(e.target.value)}
                 className={classes.marginBottomMedium}
               >
-                <FormControlLabel value="300000" control={<Radio color="primary" />} label="5 min" />
                 <FormControlLabel value="600000" control={<Radio color="primary" />} label="10 min" />
-                <FormControlLabel value="1800000" control={<Radio color="primary" />} label="30 min" />
+                <FormControlLabel value="1200000" control={<Radio color="primary" />} label="20 min" />
+                <FormControlLabel value="2400000" control={<Radio color="primary" />} label="40 min" />
                 <FormControlLabel value="3600000" control={<Radio color="primary" />} label="60 min" />
                 <FormControlLabel value="86400000‬" control={<Radio color="primary" />} label="No limit" />
               </RadioGroup>
