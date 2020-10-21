@@ -24,8 +24,13 @@ const styles = theme => ({
   },
 });
 
+const SESSION_TYPES = {
+  SAME: "same",
+  CLASS: "class",
+};
+
 const IndexPage = ({ classes }) => {
-  const [type, setType] = useState("same");
+  const [type, setType] = useState(SESSION_TYPES.SAME);
   const [shortTime, setShortTime] = useState("60000");
   const [longTime, setLongTime] = useState("600000");
   const [shortPicturesBeforeLong, setShortPicturesBeforeLong] = useState(10);
@@ -55,6 +60,9 @@ const IndexPage = ({ classes }) => {
     }, 1000);
   }, [timer]);
 
+  const disableShortRadioButtons = 
+    (shortPicturesBeforeLong === "0" || shortPicturesBeforeLong === 0) && type === SESSION_TYPES.CLASS;
+
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.container}>
@@ -70,21 +78,39 @@ const IndexPage = ({ classes }) => {
             onChange={(e) => setType(e.target.value)}
             className={classes.marginBottomMedium}
           >
-            <FormControlLabel value="same" control={<Radio color="primary" />} label="Same length" />
-            <FormControlLabel value="class" control={<Radio color="primary" />} label="Class" />
+            <FormControlLabel value={SESSION_TYPES.SAME} control={<Radio color="primary" />} label="Same length" />
+            <FormControlLabel value={SESSION_TYPES.CLASS} control={<Radio color="primary" />} label="Class" />
           </RadioGroup>
-          <FormLabel component="legend">{type === "class" ? "Short picture time" : "Time per picture"}</FormLabel>
+          <FormLabel component="legend">
+            {type === SESSION_TYPES.CLASS ? "Short picture time" : "Time per picture"}
+          </FormLabel>
           <RadioGroup
             value={shortTime}
             onChange={(e) => setShortTime(e.target.value)}
             className={classes.marginBottomMedium}
           >
-            <FormControlLabel value="30000" control={<Radio color="primary" />} label="30 sec" />
-            <FormControlLabel value="60000" control={<Radio color="primary" />} label="60 sec" />
-            <FormControlLabel value="90000" control={<Radio color="primary" />} label="90 sec" />
-            <FormControlLabel value="120000" control={<Radio color="primary" />} label="120 sec" />
+            <FormControlLabel
+              value="30000"
+              control={<Radio color="primary" disabled={disableShortRadioButtons} />}
+              label="30 sec"
+            />
+            <FormControlLabel
+              value="60000"
+              control={<Radio color="primary" disabled={disableShortRadioButtons} />}
+              label="60 sec"
+            />
+            <FormControlLabel
+              value="90000"
+              control={<Radio color="primary" disabled={disableShortRadioButtons} />}
+              label="90 sec"
+            />
+            <FormControlLabel
+              value="120000"
+              control={<Radio color="primary" disabled={disableShortRadioButtons} />}
+              label="120 sec"
+            />
           </RadioGroup>
-          {type === "class" && (
+          {type === SESSION_TYPES.CLASS && (
             <>
               <FormLabel component="legend">Long picture time</FormLabel>
               <RadioGroup
