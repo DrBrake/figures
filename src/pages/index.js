@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useStaticQuery, graphql } from "gatsby"
-import { Button, RadioGroup, Radio, Typography, FormControlLabel, FormControl, FormLabel, TextField } from "@material-ui/core";
+import { Button, RadioGroup, Radio, Typography, FormControlLabel, FormControl, FormLabel, TextField, Grid, Dialog } from "@material-ui/core";
 import { withStyles } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Fullscreen from "react-full-screen";
+import { v4 as uuidv4 } from "uuid";
 
 import Images from "../components/images";
 import theme from '../styles/theme';
@@ -22,6 +23,25 @@ const styles = theme => ({
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
   },
+  toggleText: {
+    color: theme.palette.primary.main,
+    cursor: "pointer",
+    marginLeft: theme.spacing(2),
+  },
+  image: {
+    objectFit: "cover",
+    width: "100px",
+    height: "100px",
+    cursor: "pointer",
+  },
+  actionContainer: {
+    display: "flex",
+    alignItems: "center",
+    paddingBottom: theme.spacing(2),
+  },
+  overflow: {
+    overflow: "hidden",
+  },
 });
 
 const SESSION_TYPES = {
@@ -36,6 +56,8 @@ const IndexPage = ({ classes }) => {
   const [shortPicturesBeforeLong, setShortPicturesBeforeLong] = useState(10);
   const [fullScreen, setFullScreen] = useState(false);
   const [timer, setTimer] = useState(0);
+  const [showImageGrid, setShowImageGrid] = useState(false);
+  const [imageFromGrid, setImageFromGrid] = useState(null);
 
   const data = useStaticQuery(graphql`
   {
@@ -134,20 +156,55 @@ const IndexPage = ({ classes }) => {
               />
             </>
           )}
-          <Button
-            color="primary"
-            variant="contained"
-            disabled={timer !== 0}
-            onClick={() => {
-              setTimer(3);
-              setTimeout(() => {
-                setFullScreen(true);
-              }, 3000);
-            }}
-          >
-            Start!
-          </Button>
+          <div className={classes.actionContainer}>
+            <Button
+              color="primary"
+              variant="contained"
+              disabled={timer !== 0}
+              onClick={() => {
+                setTimer(3);
+                setTimeout(() => {
+                  setFullScreen(true);
+                }, 3000);
+              }}
+            >
+              Start!
+            </Button>
+            <Typography
+              variant="body1"
+              className={classes.toggleText}
+              onClick={() => setShowImageGrid(!showImageGrid)}
+            >
+                Toggle images
+            </Typography>
+          </div>
         </FormControl>
+        {showImageGrid && (
+          <Grid container>
+            {data?.allFile?.edges?.map(item => (
+              <Grid item key={uuidv4()}>
+                <img
+                  src={item.node?.publicURL}
+                  alt=""
+                  className={classes.image}
+                  onClick={() => setImageFromGrid(item.node?.publicURL)}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+        <Dialog
+          open={imageFromGrid !== null}
+          onClose={() => setImageFromGrid(null)}
+          maxWidth={false}
+        >
+          <img
+            src={imageFromGrid}
+            alt=""
+            onClick={() => setImageFromGrid(null)}
+            className={classes.overflow}
+          />
+        </Dialog>
       </div>
       {timer !== 0 && (
         <Typography
