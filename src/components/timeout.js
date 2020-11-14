@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect } from "react";
 
 const useTimeout = (callback, delay) => {
   const timeoutRef = useRef();
@@ -9,7 +9,7 @@ const useTimeout = (callback, delay) => {
   }, [callback]);
 
   useEffect(() => {
-    if (typeof delay === 'number') {
+    if (typeof delay === "number") {
       timeoutRef.current = setTimeout(() => callbackRef.current(), delay);
 
       return () => clearTimeout(timeoutRef.current);
@@ -17,6 +17,6 @@ const useTimeout = (callback, delay) => {
   }, [delay]);
 
   return timeoutRef;
-}
+};
 
 export default useTimeout;

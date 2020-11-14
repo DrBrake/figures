@@ -1,54 +1,60 @@
 import React, { useState, useEffect, useReducer } from "react";
 import classNames from "classnames";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-import { PlayArrow, Pause, Close, FastForward, FastRewind } from "@material-ui/icons";
+import {
+  PlayArrow,
+  Pause,
+  Close,
+  FastForward,
+  FastRewind,
+} from "@material-ui/icons";
 
 import useTimeout from "./timeout";
 import useInterval from "./interval";
 
-const styles = theme => ({
+const styles = (theme) => ({
   container: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
-  image:  {
-    position: 'absolute',
-    height: '100%',
-    top: '50%',
-    left: '50%',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+  image: {
+    position: "absolute",
+    height: "100%",
+    top: "50%",
+    left: "50%",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
   },
   name: {
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     zIndex: 1,
-    color: 'white',
-    padding: theme.spacing(2)
+    color: "white",
+    padding: theme.spacing(2),
   },
   icon: {
-    cursor: 'pointer',
+    cursor: "pointer",
     zIndex: 1,
     height: theme.spacing(8),
     width: theme.spacing(8),
   },
   closeIcon: {
-    position: 'absolute',
-    cursor: 'pointer',
+    position: "absolute",
+    cursor: "pointer",
     width: theme.spacing(4),
     height: theme.spacing(4),
     right: theme.spacing(2),
     zIndex: 1,
   },
   bar: {
-    display: 'flex',
-    justifyContent: 'center',
-    position: 'absolute',
+    display: "flex",
+    justifyContent: "center",
+    position: "absolute",
     bottom: 0,
     left: 0,
-    width: '100%',
-    background: 'rgba(0, 0, 0, 0.7)',
+    width: "100%",
+    background: "rgba(0, 0, 0, 0.7)",
     zIndex: 1,
   },
   visible: {
@@ -58,32 +64,35 @@ const styles = theme => ({
     opacity: 0,
   },
   timer: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
     zIndex: 1,
-    color: '#ee008b',
+    color: "#ee008b",
     fontWeight: 900,
-    fontSize: '10rem',
+    fontSize: "10rem",
   },
 });
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'newImage':
+    case "newImage":
       const newImages = state.availableImages.filter((el, elIndex) => {
         if (elIndex !== action.index) return el;
         return null;
       });
       return {
         ...state,
-        seenImageIndex: state.seenImages.length !== 0 ? state.seenImageIndex + 1 : 0,
-        seenImages: state.seenImages.concat(new Array(state.availableImages[action.index])),
+        seenImageIndex:
+          state.seenImages.length !== 0 ? state.seenImageIndex + 1 : 0,
+        seenImages: state.seenImages.concat(
+          new Array(state.availableImages[action.index])
+        ),
         availableImages: newImages.length > 0 ? newImages : action.data,
       };
-    case 'imageFromHistory':
+    case "imageFromHistory":
       return {
         ...state,
         seenImageIndex: state.seenImageIndex + action.dir,
@@ -111,7 +120,10 @@ const Images = ({ classes, onClose, options, data }) => {
   }, []);
 
   useInterval(() => setNewImage(), play ? imageTimeout : null);
-  useTimeout(() => setcontrolsVisible(false), controlsVisible ? visibilityDelay : null);
+  useTimeout(
+    () => setcontrolsVisible(false),
+    controlsVisible ? visibilityDelay : null
+  );
   useTimeout(() => setPictureIndicatorTimeout(null), pictureIndicatorTimeOut);
 
   const getRandom = () => {
@@ -123,7 +135,7 @@ const Images = ({ classes, onClose, options, data }) => {
 
   const setNewImage = () => {
     const index = getRandom();
-    dispatch({ type: 'newImage', index: index, data: data });
+    dispatch({ type: "newImage", index: index, data: data });
     setImageTimeoutByType();
   };
 
@@ -131,29 +143,49 @@ const Images = ({ classes, onClose, options, data }) => {
     if (options.type === "same") {
       setImageTimeout(parseInt(options.shortTime));
     } else if (options.type === "class") {
-      const timeForLongImage = state.seenImages.length > parseInt(options.shortPicturesBeforeLong) - 1;
-      setImageTimeout(timeForLongImage ? parseInt(options.longTime) : parseInt(options.shortTime));
+      const timeForLongImage =
+        state.seenImages.length > parseInt(options.shortPicturesBeforeLong) - 1;
+      setImageTimeout(
+        timeForLongImage
+          ? parseInt(options.longTime)
+          : parseInt(options.shortTime)
+      );
       if (timeForLongImage) {
         setPictureIndicatorTimeout(5000);
       }
     }
-  }
+  };
 
   return (
     <div className={classes.container}>
-      <Typography className={classNames(classes.name, controlsVisible ? classes.visible : classes.hidden)}>
+      <Typography
+        className={classNames(
+          classes.name,
+          controlsVisible ? classes.visible : classes.hidden
+        )}
+      >
         {state.seenImages[state.seenImageIndex]?.node?.name}
       </Typography>
       <Close
-        className={classNames(classes.closeIcon, controlsVisible ? classes.visible : classes.hidden)}
+        className={classNames(
+          classes.closeIcon,
+          controlsVisible ? classes.visible : classes.hidden
+        )}
         color="secondary"
         onClick={onClose}
         onMouseEnter={() => setcontrolsVisible(true)}
         onMouseLeave={() => setVisibilityDelay(3000)}
       />
-      <img src={state.seenImages[state.seenImageIndex]?.node?.publicURL} alt="" className={classes.image} />
+      <img
+        src={state.seenImages[state.seenImageIndex]?.node?.publicURL}
+        alt=""
+        className={classes.image}
+      />
       <div
-        className={classNames(classes.bar, controlsVisible ? classes.visible : classes.hidden)}
+        className={classNames(
+          classes.bar,
+          controlsVisible ? classes.visible : classes.hidden
+        )}
         onMouseEnter={() => setcontrolsVisible(true)}
         onMouseLeave={() => setVisibilityDelay(3000)}
       >
@@ -163,20 +195,26 @@ const Images = ({ classes, onClose, options, data }) => {
           onClick={() => {
             if (state.seenImageIndex > 0) {
               setPlay(false);
-              dispatch({ type: 'imageFromHistory', dir: -1 });
+              dispatch({ type: "imageFromHistory", dir: -1 });
             }
           }}
         />
-        {play
-          ? <Pause className={classes.icon} color="secondary" onClick={() => setPlay(false)} />
-          : <PlayArrow
-              className={classes.icon}
-              color="secondary"
-              onClick={() => {
-                  setPlay(true);
-                  setImageTimeoutByType();
-              }}
-            />}
+        {play ? (
+          <Pause
+            className={classes.icon}
+            color="secondary"
+            onClick={() => setPlay(false)}
+          />
+        ) : (
+          <PlayArrow
+            className={classes.icon}
+            color="secondary"
+            onClick={() => {
+              setPlay(true);
+              setImageTimeoutByType();
+            }}
+          />
+        )}
         <FastForward
           className={classes.icon}
           color="secondary"
@@ -184,19 +222,19 @@ const Images = ({ classes, onClose, options, data }) => {
             setPlay(false);
             if (state.seenImageIndex + 1 === state.seenImages.length) {
               setNewImage();
-            }
-            else {
-              dispatch({ type: 'imageFromHistory', dir: +1 });
+            } else {
+              dispatch({ type: "imageFromHistory", dir: +1 });
             }
           }}
         />
       </div>
-      {pictureIndicatorTimeOut && state.seenImages.length > parseInt(options.shortPicturesBeforeLong) - 1 && (
-        <Typography
-          variant="h1"
-          className={classes.timer}>
-            {`${(parseInt(options.longTime) / 10000) / 6}min`}
-        </Typography>)}
+      {pictureIndicatorTimeOut &&
+        state.seenImages.length >
+          parseInt(options.shortPicturesBeforeLong) - 1 && (
+          <Typography variant="h1" className={classes.timer}>
+            {`${parseInt(options.longTime) / 10000 / 6}min`}
+          </Typography>
+        )}
     </div>
   );
 };
