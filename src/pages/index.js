@@ -110,6 +110,17 @@ const IndexPage = ({ classes }) => {
     (shortPicturesBeforeLong === "0" || shortPicturesBeforeLong === 0) &&
     type === SESSION_TYPES.CLASS;
 
+  const sortByName = (array) => {
+    if (array) {
+      return array.sort((a, b) => {
+        if (a?.node?.name < b?.node?.name) return -1;
+        else if (a?.node?.name > b?.node?.name) return 1;
+        return 0;
+      });
+    }
+    return [];
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.container}>
@@ -242,7 +253,7 @@ const IndexPage = ({ classes }) => {
         </FormControl>
         {showImageGrid && (
           <Grid container>
-            {data?.allFile?.edges?.map((item) => (
+            {sortByName(data?.allFile?.edges).map((item) => (
               <Grid item key={uuidv4()}>
                 <img
                   src={item.node?.publicURL}
